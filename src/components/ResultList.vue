@@ -3,12 +3,10 @@ import { ref, computed, onMounted } from 'vue';
 import { useRouter, useRoute, stringifyQuery, type LocationQueryValue } from 'vue-router'
 import ResultItem from '@/components/ResultItem.vue';
 import FacetBlock from '@/components/FacetBlock.vue';
-import CamplPageHeader from '@/components/campl-page-header.vue';
 import NoResults from '@/components/NoResults.vue';
 import 'vue-awesome-paginate/dist/style.css';
 import { CSpinner } from '@coreui/vue';
 import { _is_hierarchical, cancel_link, _get_first_value, _query_param_sort, _params_to_query_structure, _tracer_bullet } from '@/lib/utils';
-import ContributorDetails from '@/components/ContributorDetails.vue';
 import * as implementation from '@/implementationConfig'
 
 // Use this to check for the existence of methods and to run them
@@ -18,7 +16,7 @@ const router = useRouter();
 const route = useRoute();
 
 const commits = ref<Array<{ id: PropertyKey; [key: string]: unknown }>>([]);
-const facets = ref<Record<string, unknown>>({});
+const facets = ref<Record<string, { val: string; count: number }[]>>({});
 const is_loading = ref<boolean>(true);
 const is_error = ref<{ bool: boolean; message: string }>({ bool: false, message: "" });
 const items_per_page = 20
@@ -107,6 +105,13 @@ const all_params_uri = computed<string>(() =>{
   return result_array.join('&')
 })
 
+const view_mode = computed(() => {
+  const show_obj = Array.isArray(all_params.value.filter(item => item.key == 'show')) ? all_params.value.filter(item => item.key == 'show')[0]: {"key": "show", "value": ""}
+  const show = show_obj?.value
+  let result: string  = "diplomatic"
+  if (['normalised', 'translation'].includes(show))  { result = show}
+  return result
+})
 
 const keyword_string = computed<string>(() => {
   return all_params.value.filter(item => item.key === 'keyword')
@@ -127,8 +132,15 @@ const advanced_query_string = computed<string>(() => {
   return stringifyQuery(result)
 })
 
+const show_select = ref(view_mode)
+const show_form = ref<HTMLFormElement | null>(null)
+const sort_select = ref(sort)
+const sort_form = ref<HTMLFormElement | null>(null)
+
 function get_facet_header(str: string) {
-  return (str in implementation.facet_key ) ? implementation.facet_key[str]['name']: str
+  return implementation.facet_key[str]?.name
+    ?? implementation.facet_key[`${str}-0`]?.name
+    ?? str
 }
 
 function throw_error(error: string) {
@@ -217,6 +229,12 @@ async function fetchData(start: number) {
   }
 }
 
+function has_facets(section_facets: string[]) {
+  return Object.values(Object.fromEntries(Object.entries(facets.value).filter(([key]) => section_facets.includes(key))) as Record<string, { val: string; count: number }[]>).some(arr => arr.length > 0)
+}
+
+
+
 onMounted(async () => {
   window.scrollTo(0, 0)
   await fetchData(currentPage.value).then(() => {
@@ -226,13 +244,13 @@ onMounted(async () => {
 </script>
 
 <template>
-  <campl-page-header :keywords="keyword_string" :key="keyword_string" />
-  <div class="resultsHeader container-fluid">
+  <!--<campl-page-header :keywords="keyword_string" :key="keyword_string" />-->
+  <div class="">
 
-    <div class="row darwin-search-results" v-show="is_loading">
+    <div class="labels mode-controls campl-column12" v-show="is_loading">
               <CSpinner />
     </div>
-    <div class="row darwin-search-results" v-if="is_error['bool']">
+    <div class="labels mode-controls campl-column12" v-if="is_error['bool']">
       <p>
         I'm sorry, I'm unable to complete your request ({{
           is_error['message']
@@ -240,101 +258,130 @@ onMounted(async () => {
       </p>
       <p>Please try again in a few minutes</p>
     </div>
-    <div v-show="!is_loading && !is_error['bool']" :key="route.fullPath">
-      <div class="row">
-        <div class="col">
-          <div class="row">
-            <span class="col-auto label"><b>Search:</b></span>
-            <span class="col-6 pl-0">
-              <span
-                  class="option"
-                  v-for="o in filtering_params"
-                  :key="JSON.stringify(o)">
-                                  <span class="subhit">{{ o.value }}</span>
-                                  in <b>{{ get_facet_header(o.key) }}</b>&nbsp;
+    <div class="labels mode-controls campl-column12" v-show="!is_loading && !is_error['bool']" :key="route.fullPath">
+      <div class="query campl-column8">
+        <div class="campl-content-container">
+          <div id="results_label">
+            <form ref="show_form" method="get" action="/search">
+            <input
+              v-for="obj in filtering_params.concat({'key': 'sort', 'value': sort })"
+              type="hidden"
+              :name="String(obj.key)"
+              :value="obj.value"
+              :key="obj.key + obj.value"
+            />
+            <input type="hidden" name="page" value="1" />
+            <span>Display </span>
+            <select size="1" name="show" v-model="show_select" @change="show_form!.submit()">
+              <option value="diplomatic">diplomatic version</option>
+              <option value="normalised">normalised version</option>
+              <option value="translation">normalised version with translation</option>
+            </select>
+          </form>
+            <p v-show="total >= 1">
+              <span id="itemCount">{{ total }}</span> Item{{
+                total != 1 ? 's' : ''
+              }}
+            </p>
 
-                  <router-link class="text-danger" :to="{ name: 'search', query: cancel_link(o.key, o.value, all_params) }">
-                                  <i class="fas fa-window-close" aria-hidden="true"></i>
-                                  </router-link>
-                  <br />
-              </span>
-            </span>
+            <ul>
+              <li
+              class="option"
+              v-for="o in filtering_params"
+              :key="JSON.stringify(o)">
+              <span class="subhit">{{ o.value }}</span>
+              in <b>{{ get_facet_header(o.key) }}</b>&nbsp;
+              <router-link class="text-danger" :to="{ name: 'search', query: cancel_link(o.key, o.value, all_params) }">
+                <i class="fa fa-window-close" aria-hidden="true"></i>
+              </router-link>
+            </li>
+            </ul>
           </div>
         </div>
-        <div class="col-auto text-right">
-
-              <form method="get" action="/search" v-show="total >= 1">
-                <div class="form-row d-inline-flex">
-                  <div class="col-auto">
-                    <b>Sorted by:</b>
-                  </div>
-                  <div class="col-auto">
-                    <select class="form-control form-control-sm" size="1" name="sort">
-                  {{
-                    sort
-                  }}
-                  <option
-                    value="score"
-                    :selected="sort == 'score'"
-                  >
-                    relevance
-                  </option>
-                  <option
-                    value="author"
-                    :selected="sort == 'author'"
-                  >
-                    author
-                  </option>
-                  <option
-                    value="addressee"
-                    :selected="sort == 'addressee'"
-                  >
-                    addressee
-                  </option>
-                  <option
-                    value="date"
-                    :selected="sort == 'date'"
-                  >
-                    date
-                  </option>
-                </select>
-                  </div>
-                <input
-                  v-for="obj in filtering_params"
-                  type="hidden"
-                  :name="String(obj.key)"
-                  :value="obj.value"
-                  :key="obj.key + obj.value"
+      </div>
+      <div class="campl-column4 result-controls right">
+        <div class="campl-content-container">
+          <form ref="sort_form" method="get" action="/search">
+            <span>Sorted by:&nbsp;</span>
+            <select size="1" name="sort" v-model="sort_select" @change="sort_form!.submit()">
+              <option value="score">relevance</option>
+              <option value="sort-date">consultation date (asc)</option>
+              <option value="sort-date-desc">consultation date (desc)</option>
+              <option value="sort-shelfmark">classmark (and folio)</option>
+              <option value="sort-volume-name">volume name</option>
+              <option value="sort-title">title</option>
+            </select>
+            <input
+              v-for="obj in filtering_params.concat({'key': 'show', 'value': view_mode })"
+              type="hidden"
+              :name="String(obj.key)"
+              :value="obj.value"
+              :key="obj.key + obj.value"
+            />
+            <input type="hidden" name="page" value="1" />
+          </form>
+        </div>
+      </div>
+      <div class="campl-column12">
+        <div class="campl-content-container" v-if="total >= 1">
+          <div :class="'campl-pagination campl-pagination-centered ' + paginate_results">
+            <vue-awesome-paginate
+              :totalItems="total"
+              :itemsPerPage="items_per_page"
+              :maxPagesShown="5"
+              v-model="currentPage"
+              @click="updateURL"
+              type="link"
+              :linkUrl="'/search?page=[page]&' + all_params_uri"
+              paginationContainerClass="pagination justify-content-center"
+              paginateButtonsClass="page-link"
+            />
+          </div>
+          <div class="campl-column12">
+            <div class="campl-column3 campl-secondary-content facets">
+              <h2>Refine your results</h2>
+              <div v-for="section in implementation.structured_desired" :key="filtering_params_string+section.id">
+                <facet-block
+                  v-for="(facet, index) in section.facets"
+                  :section_id="section.id"
+                  :desired_facet="facet"
+                  :facets="facets"
+                  :facet_key="implementation.facet_key"
+                  :params="all_params"
+                  :has_facets="has_facets(section.facets)"
+                  :section_title="section.title"
+                  :index="index"
+                  :key="filtering_params_string+'::'+facet"
                 />
-                <input type="hidden" name="page" value="1" />
-                &nbsp;<input class="btn btn-info btn-sm" type="submit" value="Go!" />
+              </div>
 
             </div>
-              </form>
-            <!--<div class="mt-2 small">
-              <a
-                href="https://epsilon.ac.uk/search?keyword=water&amp;f1-correspondent=Faraday%2C%20Michael&amp;f1-document-type=letter&amp;f1-date=1860-1869%3A%3A1861&amp;smode=embedded-modify"
-              >Modify Search</a>
-            </div>-->
-
-        </div>
-      </div>
-      <div v-if="total >= 1">
-        <div class="container-fluid mb-4">
-          <ContributorDetails v-for="o in filtering_params.filter(item => item.key=='f1-contributor')" :contributor="o.value" :key="o.value" />
-        </div>
-      <div class="row" v-show="total >= 1">
-        <div class="col num_items">
-          <span id="itemCount">{{ total }}</span> Item{{
-            total != 1 ? 's' : ''
-          }} <!--<p>Showing <b>1</b>–<b>11</b> of <b>11</b> items</p>-->
-          <div class="num_items">
+            <div class="campl-column9 campl-main-content results">
+              <div class="campl-content-container docHits campl-no-top-padding">
+                <ResultItem
+                  v-for="(item, index) in commits"
+                  :params="all_params"
+                  :item="item"
+                  :currentPage="currentPage"
+                  :index="index"
+                  :key="JSON.stringify(item)"
+                />
+              </div>
+            </div>
 
           </div>
         </div>
+        <NoResults
+          :keyword="keyword_string"
+          v-else-if="total === 0"
+        />
       </div>
+    </div>
 
-      <div :class="'row justify-content-md-center pagination-row ' + paginate_results">
+</div>
+  <div class="campl-column12">
+    <div class="campl-content-container" v-if="total >= 1">
+      <div :class="'campl-pagination campl-pagination-centered ' + paginate_results">
         <vue-awesome-paginate
           :totalItems="total"
           :itemsPerPage="items_per_page"
@@ -347,57 +394,26 @@ onMounted(async () => {
           paginateButtonsClass="page-link"
         />
       </div>
-<div class="row mt-3 mr-2">
-    <div class="col order-2">
-      <ResultItem
-                          v-for="(item, index) in commits"
-                          :item="item"
-                          :currentPage="currentPage"
-                          :index="index"
-                          :key="JSON.stringify(item)"
-    />
     </div>
-  <div class="col-md-4 order-2 order-md-1 col-12 mt-3 mt-md-0">
-
-          <div class="facet">
-
-              <facet-block
-                v-for="facet in implementation.desired_facets"
-                :desired_facet="facet"
-                :facets="facets"
-                :facet_key="implementation.facet_key"
-                :params="all_params"
-                :key="filtering_params_string+'::'+facet"
-              />
-
-          </div>
-        </div>
-      </div>
-    </div>
-      <NoResults
-        :keyword="keyword_string"
-        v-else-if="total === 0"
-      />
-  </div>
-</div>
-  <div :class="'row justify-content-md-center pagination-row ' + paginate_results">
-    <vue-awesome-paginate
-      :totalItems="total"
-      :itemsPerPage="items_per_page"
-      :maxPagesShown="5"
-      v-model="currentPage"
-      @click="updateURL"
-      type="link"
-      :linkUrl="'/search?page=[page]&' + all_params_uri"
-      paginationContainerClass="pagination justify-content-center"
-      paginateButtonsClass="page-link"
-    />
   </div>
 </template>
 
 <style>
 #app {
   min-height: 100vh;
+}
+
+.facet ul {list-style-type:none}
+.facet ul.facetGroup {margin:0}
+
+ul.facetGroup li:not(.parent) {
+  list-style-type: none;
+}
+.facet ul.facetGroup ul.facetSubGroup {
+  margin-left: 1.75rem;
+}
+.campl-secondary-content .campl-content-container {
+  background: #fefefe;
 }
 
 .dcpNew em.match {
@@ -416,9 +432,21 @@ onMounted(async () => {
 a.page-link.active-page {
   z-index: 3;
   color: #fff;
-  border-color: #0a498b !important;
-  background-color: #0a498b !important;
+  background-color: #f2f2f2;
+  color: #000000;
+  font-weight:bold;
 }
+
+a.next-button, a.back-button {
+  background: #171717;
+  color: #f2f2f2;
+}
+
+a.next-button:hover, a.back-button:hover {
+  background: #454545;
+  color: #f2f2f2;
+}
+
 a.page-link.active-page:hover {
   background-color: #07305b !important;
 }

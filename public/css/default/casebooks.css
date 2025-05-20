@@ -1,0 +1,609 @@
+/* crossQuery RESULTS stylesheet */
+               @font-face {
+               font-family: 'Newton Sans';
+               src: url('../fonts/NewtonSans.eot'); /* IE9 Compat Modes */
+               src: url('../fonts/NewtonSans.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+               url('../fonts/NewtonSans.woff') format('woff'), /* Modern Browsers */
+               url('../fonts/NewtonSans.ttf')  format('truetype'), /* Safari, Android, iOS */
+               url('../fonts/NewtonSans.svg#717182e6b3f6e418f2528d246568536f') format('svg'); /* Legacy iOS */
+               
+               font-style:   normal;
+               font-weight:  400;
+               }
+               @font-face {
+               font-family: 'Cardo';
+               src: url('../fonts/Cardo104s.eot'); /* IE9 Compat Modes */
+               src: url('../fonts/Cardo104s.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+               url('../fonts/Cardo104s.woff') format('woff'), /* Modern Browsers */
+               url('../fonts/Cardo104s.ttf')  format('truetype'), /* Safari, Android, iOS */
+               url('../../fonts/Cardo104s.svg#ca898a635a8375daa7bc3c1ed216ba43') format('svg'); /* Legacy iOS */
+               
+               font-style:   normal;
+               font-weight:  400;
+               }
+
+body{
+line-height: 1.5;
+}
+
+
+.docHits>.docHit {
+    /*border: 1px solid #57831a;*/
+    background:#fafafa;
+    font-size:16px;
+}
+
+.docHits>div.docHit:not(:first-child) .campl-listing-txt {padding-top:0; }
+
+.docHit .campl-listing-txt {padding-top:0; padding-bottom:0; margin-bottom:0}
+.campl-search-listing a, .campl-vertical-breadcrumb a { color: #0072cf}
+.campl-listing-item {border:none;}
+
+.facets>.campl-content-container {
+    padding-top: 0.5em;
+}
+.facets h3 {font-size:1.25em;}
+div.facetName {
+  font-weight: bold;
+	font-size: 95%;
+}
+
+div.facetMore {
+margin: 0.25em 0 1.5em 2em;
+}
+
+div.facetLess {
+   margin-left: 2em;
+   margin-bottom: 0.5em;
+}
+
+.tag_container {padding-bottom: 0.5em; font-size:0.75em; padding-top: 1em; }
+
+
+.tag_container span.tag, .tag_container span.action, span.action {
+/*    background-attachment: scroll;
+    background-clip: border-box;*/
+    background-color: #D1E9B1;
+    background-image: none;
+/*    background-origin: padding-box;
+    background-position-x: 0px;
+    background-position-y: 0px;
+    background-repeat-x: ;
+    background-repeat-y: ;*/
+    background-size: auto;
+    border-color: #304220;
+/*    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;*/
+    border-style: solid;
+    border-width: 1px;
+    /*border-image-outset: 0px;
+    border-image-repeat: stretch;
+    border-image-slice: 100%;
+    border-image-source: none;
+    border-image-width: 1;*/
+/*    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;*/
+    /*box-sizing: border-box;*/
+    color: black;
+    cursor: pointer;
+    display: inline-block;
+    font-family: verdana, arial, sans-serif; 
+    font-size: 0.95em;
+    /*font-weight: bold;*/
+    /*height: 34px;*/
+    line-height: 1.4;
+    margin:0.3em;
+    /*padding-bottom: 6px;*/
+    padding: 0.14em 0.5em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    /*padding-top: 6px;*/
+    text-align: center;
+    text-decoration-color: rgb(255, 255, 255);
+    text-decoration-line: none;
+    text-decoration-style: solid;
+    /*text-size-adjust: 100%;
+    user-select: none;*/
+    vertical-align: middle;
+    white-space: nowrap;
+    /* width: 70.9375px; */
+    /*-webkit-tap-highlight-color: rgba(0, 0, 0, 0);*/
+    opacity:0.95
+}
+
+.tag_container span.tag:hover, .tag_container span.action:hover, span.action:hover {color: white;
+    background: #304220}
+
+.tag_container .tag a, .tag_container .action a, .action a {
+    color: inherit;
+    text-decoration: none;
+    vertical-align: top;
+}
+.tag_container span.action {margin-bottom:1em;}
+
+
+.docHit .main_topic {
+   margin-bottom: 0;
+   
+}
+
+.subtopics {display:inline-block;}
+
+.subtopics span.marker, .consultants span.marker, .topics .marker {
+    font-size: 1.5em;
+    vertical-align: middle;
+}
+
+.docHit p, .docHit h4 {
+    margin-top: 0;
+    margin-bottom: 0.5em;
+}
+.docHit p {margin-top: 1em; margin-bottom:1em;}
+
+.transcription p.classmark {
+    font-size: 0.9em;
+    font-weight: normal;
+    color: #555;
+    margin-bottom:0;
+    line-height:1.3;
+}
+
+p.how-did-it-take-place {
+    margin-top: 0;
+    font-style: italic;
+}
+.cb {color: #48577C}
+
+.tag_container .tag .fa, .tag_container .action .fa {
+    padding-right: 0.5em;
+    font-size:1.4em;
+    opacity: 0.65;
+}
+
+.tag.open i.fa.fa-window-close {
+    padding-right: 0;
+    padding-left: 0.5em;
+}
+        
+.ns {font-family: "Newton Sans"}
+.cardo {font-family: 'Cardo', serif; }
+
+.transcription, #endnotes, .transcription_container {margin: 0 auto;}
+.case, .identified-entity, .text, .letter, .site, .note, .docHit, #tagline, .docHit h5  {    font-family: Constantia,Palatino,"Palatino Linotype","Palatino LT STD",Georgia,serif;
+    
+}
+.docHit h5 {color: black; font-weight:normal;}
+
+.case, .identified-entity, .text, .letter, .site, .note {font-size: 16px}
+.transcription {position:relative;}
+.docHit, .transcription {
+    padding-top:1em;
+}
+.case .content.campl-column12 {
+    border: 1px solid;
+    border-left: none;
+}
+
+.docHit .transcription_container .transcription {padding-bottom: 0;}
+
+.transcription_container td {padding:0 !important}
+
+.site li, .site .li {line-height:1.5em}
+
+.docHit .transcription {/*padding: 0.25em 1em; line-height: 1.5*/
+    padding: 1.388888889% 4.1666666666%;
+    border: 1px solid #afafaf;
+    position:relative;
+    background:white;
+    padding-bottom: 0;
+}
+
+.transcription .fa.fa.fa-file-text-o {
+vertical-align:text-top;
+font-style:normal
+    /*left: 0.694444444%;
+    position: absolute;*/
+    /*font-size: 1.25em;*/}
+
+.docHit .transcription>h3 {
+    font-size: 0.9em;
+    font-style: italic;
+    margin-left: -1.3em;
+}
+
+#savedCasesURL { font-size: 85%; }
+
+a.button:active, a.button:hover, a.button:link, a.button:visited, a.button:active, a.button:hover, a.button:link, a.button:visited, span.button {
+    color: #323C56; text-decoration:none
+}
+
+/*ul.facetGroup,ul.facetSubGroup {list-style:none;}
+
+ul.facetGroup {margin-left:0;}*/
+ul.facetGroup ul {margin-left:1.5em;}
+
+
+ul.facetGroup i.fa {font-size:1.1em; width:15px; color:black;}
+span.col3 {
+display: inline-block;
+width: 25%;
+text-align: right;
+}
+
+span.col2 {
+display: inline-block;
+width: 74%;
+padding-right: 1%;
+vertical-align:top;
+}
+
+span.col1 {
+    width: 18px;
+    display: inline-block;
+}
+
+li.parent {
+    list-style-type: none;
+    margin-left: -18px;
+}
+ul.facetGroup li:not(.parent) {list-style-type: circle;}
+ul.facetGroup>li.parent>ul.facetSubGroup>li.parent {margin-left:-1px}
+ul.facetGroup>li.parent>ul.facetSubGroup>li.parent>ul.facetSubGroup>li.parent {margin-left:-2px}
+li.parent li:not(.parent) {margin-left:inherit}
+
+
+#results_label a, #results_label a:link, #results_label a:visited, #results_label a:hover, #results_label a:active {
+    font-size:1.3em;
+    color: #F00;
+}
+
+.right {text-align: right;}
+
+.campl-page-header p {
+    color: white;
+}
+
+#tagline {font-style:italic; margin-left:8.133333333333335%; font-size:1.35em;}
+
+#image_viewer {background:black; height:500px; margin-bottom: 3em;}
+
+.transcription div h1,.transcription div h2,.transcription div h3,.transcription div h4,.transcription div h5,.transcription div h6 {
+    font-size: 1.2em;
+}
+
+
+p.consultant, p.querent {margin-top:0.5em; margin-bottom:0.5em}
+p.consultant .label, p.querent .label {font-weight:bold}
+/*.docHit-body {margin-top:1em;}*/
+
+
+
+/*  These declarations are there to fix some rather annoying flashes of unstyled content
+ *  when pages are rendered. There's still one that I haven't been able to fix with the local
+ *  site navigation first appearing as block items before inline */
+.campl-global-navigation-drawer {display:none;}
+#local-nav li {display:inline;}
+
+.campl-secondary-content>.campl-content-container:first-child {margin-top:1.25em; background:none;}
+.campl-secondary-content>.campl-content-container:first-child h2 {margin-bottom: 0;}
+.campl-secondary-content>.campl-content-container:not(:first-child) {margin-top:2em;}
+.campl-secondary-content>.campl-content-container {padding-bottom:0.21em;}
+.campl-secondary-content>.campl-content-container:nth-child(2) {margin-top:1em;}
+.campl-secondary-content>.campl-content-container>div:not(:last-child) {
+    margin-bottom: 2em;
+}
+
+.campl-secondary-content {background: inherit;}
+.campl-secondary-content .campl-content-container {
+    background: #f3f3f3;
+}
+.campl-secondary-content .campl-content-container
+h4.facetName.expandable {
+    font-size: 1.15em;
+}
+.advanced .fa {
+    font-size: 150%;
+    vertical-align: bottom;
+}
+.campl-listing-img img {max-width: 100%}
+
+/*.campl-theme-4 th {
+    background: none;
+    color: #304220;
+    border: none !important;
+}*/
+form[name=jump] {
+    text-align: center;
+    font-size:0.9em
+}
+input[value=Jump] {    vertical-align: top;}
+span.jumper_text {
+    padding-right: 1em;
+}
+input[name=startPage] {width:3.5em;margin-right:0.2em}
+
+.handShift {
+    padding: 0.25em 0.5em;
+    font-size: 0.75em;
+    vertical-align: baseline;
+    display: inline-block;
+    background-color: #4b701c;
+    color: #fff;
+    text-align: center;
+    line-height:1;
+    opacity: 0.8;
+    }
+
+#top {margin-top:3em}
+
+.campl-sub-title a {
+    text-decoration: underline;
+}
+
+button.dt-button.buttons-columnVisibility,button.dt-button.buttons-columnVisibility.active {
+    text-align: left;
+    background:none !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+button.dt-button.buttons-columnVisibility input {margin-right:1em;}
+
+
+.campl-theme-4 th {
+    background: none;
+    color: inherit;
+}
+
+.campl-theme-4 .campl-table-striped tbody tr:nth-child(odd) td, .campl-theme-4 .campl-table-striped tbody tr:nth-child(odd) th {
+    background: none;
+}
+.campl-theme-4 .campl-table-striped tbody tr:nth-child(even) td {
+    background-color: #FBFBEE;
+}
+
+
+.logo-list li {
+    text-align: center;
+}
+.wellcome-logo {margin-bottom:6em; margin-top: 4em}
+
+input#text {width:inherit}
+
+span.search-buttons {
+    padding-left: 1em;
+}
+
+td.sampleQuery {
+    white-space: nowrap;
+    padding-right: 1em;
+}
+table.sampleTable {border:none;margin-bottom:2em; width:100%}
+table.sampleTable td { padding-top: 1em; vertical-align:middle}
+
+.campl-page-sub-title h2, .campl-page-sub-title h1, .campl-sub-title, .campl-highlight-day {
+    font-size: 2em;
+    line-height: 38px;
+    color: #fff;
+}
+.campl-page-sub-title a {text-decoration:underline}
+.campl-page-sub-title p.how-did-it-take-place {
+    font-size: 1.35em;
+}
+
+.ribbon {
+  position: absolute;
+  right: -5px; top: -5px;
+  z-index: 1;
+  overflow: hidden;
+  width: 75px; height: 75px;
+  text-align: right;
+  font-family: verdana, arial, sans-serif; 
+  font-size:12px
+}
+.ribbon span {
+  font-size: 0.7em;
+  font-weight: bold;
+  color: #FFF;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 20px;
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  -ms-transform:rotate(45deg);
+  width: 100px;
+  display: block;
+  background: #79A70A;
+  background: linear-gradient(#57831A 0%, #4B701C 100%);
+  box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
+  position: absolute;
+  top: 19px; right: -21px;
+}
+.ribbon span::before {
+  content: "";
+  position: absolute; left: 0px; top: 100%;
+  z-index: -1;
+  border-left: 3px solid #4B701C;
+  border-right: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #4B701C;
+}
+.ribbon span::after {
+  content: "";
+  position: absolute; right: 0px; top: 100%;
+  z-index: -1;
+  border-left: 3px solid transparent;
+  border-right: 3px solid #4B701C;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #4B701C;
+}
+
+.campl-local-navigation .campl-local-navigation-container.campl-column9 {
+    width: 75%;
+}
+
+.actions.campl-column3 a {
+    display: inline-block;
+    background: inherit;
+    border: inherit;
+    padding-left: inherit;
+    padding-right: inherit;
+    padding-bottom: inherit;
+    font-size:0.9em
+}
+.actions.campl-column3 a:last-child{padding-right:20px}
+.actions.campl-column3 a:hover {background:inherit; text-decoration:underline}
+#results_label select {width:auto;}
+#results_label p {margin-bottom: 0;}
+
+.case .mode-controls, .text .mode-controls, .letter .mode-controls, .note .mode-controls {
+    font-family: verdana, arial, sans-serif;
+    font-size: 12px;
+}
+.campl-global-header {height:68px}
+
+.campl-column12.menu {
+    background: #355918;
+    border-bottom: 1px solid #304220;
+}
+ul#primary-nav {
+    /*  Default serifs are larger than myriad and wraps on tables suck without adjusting the size slightly */
+    font-size: 0.975em;
+}
+.campl-theme-4 .sf-menu {
+    font-family: "myriad-pro-n4", "myriad-pro", myriad, verdana, arial, sans-serif;
+    font-weight: 400;
+    color: #888888;
+    margin-bottom:0
+}
+.campl-theme-4 .sf-menu>li>a {border-bottom: none;}
+
+.campl-theme-4 .sf-menu a {
+    /*background: #355918;*/
+    border-right: 1px solid #304220;
+    border-bottom: 1px solid #304220;
+    border-top: 1px solid #304220;
+    border-left:none;
+    border-top:none;
+    color: #fff;
+    font-size:1.1em;
+}
+
+.campl-theme-4 .sf-menu li {
+	background: #355918;
+}
+
+.campl-theme-4 .sf-menu ul li, .campl-theme-4 .sf-menu>li:hover, .campl-theme-4 .sf-menu>li.sfHover{
+	background: #222f16;
+}
+
+.campl-theme-4 .sf-menu ul li:hover,
+.campl-theme-4 .sf-menu ul li.sfHover {
+	background-color: #355918;
+}
+
+
+.campl-theme-4 .campl-local-navigation a.campl-selected {
+    background: #57831a;
+}
+.campl-theme-4 .campl-local-navigation {
+    background: #355918;
+    border-bottom: 1px solid #304220;
+    border-top: 1px solid #304220;
+}
+
+.help code {
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left:0;
+    display:inline;
+}
+
+.transcription .campl-listing-title, .transcription .campl-listing-title.bold {
+    font-size:16px;
+    font-weight:normal;
+    margin-bottom:0
+}
+.transcription .how-did-it-take-place, .docHit p.author {
+    font-family: verdana, arial, sans-serif;
+    font-size:13px;
+    line-height: 1.5;
+    margin-top: 0.25em;
+    margin-bottom: 0;
+}
+
+.transcription .case-text {
+    border-top: 1px solid black;
+    padding-top: 1em;
+}
+
+.campl-content {
+    background: #fafafa;
+}
+.transcription>.ribbon+h4.bold.campl-listing-title,.transcription>.campl-content-container>.ribbon+* {
+    padding-right: 35px;
+}
+ 
+
+.fa-thumbnail .fa {font-size:70px; opacity: 0.7}
+p.fa-thumbnail {text-align:center}
+.campl-listing-title+p {margin-top: 0;font-family: verdana, arial, sans-serif;
+    font-size:13px;}
+    
+.docHit .identified-entity p {margin-top:0;margin-bottom:0; font-family: verdana, arial, sans-serif; font-size:13px}
+.docHit .identified-entity>h4+p:last-child {
+    margin-bottom: 2.46em;
+}
+
+table, tr, th, td { border:none}
+
+.identified-entity .table-row {line-height:1.5; margin-bottom:0.5em;}
+.identified-entity .table-row span {display:table-cell}
+.identified-entity .table-row span.label {width:7em}
+.docHit .identified-entity .label {font-weight:normal}
+.docHit .identified-entity>h4:last-child {margin-bottom:4em}
+
+ul.sf-menu>li:first-child { padding-left: 8px;}
+ul.sf-menu a {padding-left:12px; padding-right:12px;}
+
+.site .transcription h2,.site .transcription h3,.site .transcription h4,.site .transcription h5,.site .transcription h6 {font-weight:normal;}
+
+.site .transcription h2 {font-size: 1.5em;}
+
+.site .transcription h3 {font-size: 1.4em; }
+
+.site .transcription h4,.site .transcription h5,.site .transcription h6 {font-size: 1.25em;}
+
+.case li {list-style-type: none}
+.site li {list-style-type:disc}
+
+#network_filter {
+position: absolute;
+background: #f9f9f9;
+z-index: 99;
+border: 1px solid black;
+font-size:90%;
+right:0;
+padding:0;
+display:none;
+}
+#network_filter .form_container {padding: 0.5em;padding-bottom: 0;margin-bottom: 0.25em;}
+#network_filter fieldset {border:none; background:#f9f9f9;}
+
+#network_filter input {margin-right:0.25em}
+
+#level_selector {
+max-width: 100%;
+margin-top: 1em;
+background:#fdfdfd}
+#network_filter .title {background:#444; color:#fafafa; text-align:center;padding: 0.5em}
+#social_network {position:relative}
+
+#network_filter p {margin:0; padding:0;}
+#network_filter p.paracent {margin-top:1em}
+
+.topics_list .ul>.li:first-child {
+    margin-top: 0;
+}
+.topics_list .li {margin-top:1em}
+
+.topics_list span.head, .topics_list span.desc {display:block;}

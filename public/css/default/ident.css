@@ -1,0 +1,95 @@
+#personal_details p {
+    margin-bottom: 0.5em;
+}
+
+#case_details, #mentioned {
+    font-size: 88%;
+}
+th.id {min-width: 8%}
+.date {
+    min-width: 10%;
+}
+.time {
+    min-width: 5%;
+}
+
+th.name {
+    width:14%
+}
+th.topic {
+    width: 28%;
+}
+
+th.entry_type {width: 5%}
+
+
+td {
+    font-variant-numeric: lining-nums;
+    font-feature-settings: lnum tnum;
+}
+
+td.date, td.time, th.date, th.time  {
+    text-align: right;
+}
+#case_details th, #case_details td, #mentioned th {
+    border: none ;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    border-bottom: 1px solid black
+}
+
+#case_details th,#case_details td.date, #case_details td.time   {
+    padding-right: 1.7em;
+}
+
+#case_details td, #mentioned td {
+    border: none;
+    padding-top: 1.5em;
+    padding-bottom: 1.5em;
+    vertical-align: middle;
+    }
+#mentioned th.date {width:65%}
+#mentioned td:nth-child(1), #mentioned th:nth-child(1) {text-align:left;font-variant-numeric: lining-nums;}
+#mentioned td, #mentioned th {padding-right: 1em}
+#mentioned table {width:40%}
+
+#case_details_wrapper div.dt-buttons {
+    position: relative;
+    float: none;
+    font-size: 0.75em;
+    margin-bottom: 1em;
+    text-align: left;
+}
+button.dt-button.buttons-collection.buttons-colvis {
+    position: absolute;
+    right: 0;
+}
+.buttons-columnVisibility i {
+    width: 1.4em;
+    display: inline-block;
+}
+
+.transcription .value-list ul  {margin-left:0; list-style:none}
+.transcription .value-list li {margin-bottom: 0.5em;}
+
+#social_network button.dt-button {
+    font-size: 0.66em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+.identified-entity .campl-content-container>div {
+    margin-bottom: 1.5em;
+}
+
+table#case_details {
+    font-size: 0.8em;
+}
+
+#personal_details .table-row span.data:nth-child(2) {
+    display: table-cell;
+    margin-left:0;
+}
+#personal_details .table-row span.data {
+    display: block;
+    margin-left: 7em;
+}

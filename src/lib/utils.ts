@@ -1,5 +1,6 @@
 import * as implementation from '@/implementationConfig'
 import { computed } from 'vue'
+import escape from 'core-js/actual/regexp/escape'
 
 type Facet = {
   name: string;
@@ -114,12 +115,42 @@ function _params_to_query_structure(param_array: { key: string; value: string }[
 }
 
 const cancel_link = (keyToRemove: string, valueToRemove: string, all_params: { key: string; value: string }[]): Record<string, string[]> => {
-  const child_vals = new RegExp('^"*'+ valueToRemove+'::.*$')
-  const filteredArr = all_params.filter(
+  const child_vals = new RegExp('^"*'+ escape(valueToRemove)+'::.*$')
+  const filteredArr0 = all_params.filter(
     (item) => !(item.key === keyToRemove && item.value.replace(/(^"|"$)/g, '') === valueToRemove.replace(/(^"|"$)/g, '') ||
       child_vals.test(item.value.replace(/(^"|"$)/g, ''))
       )
   );
+
+  const keysToRemove = new Set<string>();
+
+  for (const [conditionKey, dependentKeys] of Object.entries(implementation.exclusion_rules)) {
+    const conditionEntry = filteredArr0.find(entry => entry.key === conditionKey.replace(/_/g, '-'));
+    const isMissingOrEmpty = !conditionEntry || !conditionEntry.value?.trim();
+
+    if (isMissingOrEmpty) {
+      dependentKeys.forEach(key => keysToRemove.add(key));
+    }
+  }
+
+  for (const rule of implementation.advanced_exclusions) {
+    const allRequiredPresent = rule.requiredKeys.every(key =>
+      filteredArr0.some(e => e.key === key && e.value?.trim())
+    );
+
+    if (!allRequiredPresent) {
+      const target = filteredArr0.find(e => e.key === rule.targetKey);
+      if (
+        target &&
+        (!rule.targetValueEquals || target.value === rule.targetValueEquals)
+      ) {
+        keysToRemove.add(rule.targetKey);
+      }
+    }
+  }
+
+  const filteredArr = filteredArr0.filter(entry => !keysToRemove.has(entry.key));
+
   // Remove date children.
 
 

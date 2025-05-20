@@ -5,6 +5,7 @@ const props = defineProps({
 </script>
 
 <template>
+  <div class="campl-content-container">
   <table>
     <tbody>
     <tr>
@@ -124,5 +125,6 @@ const props = defineProps({
     </tr>
     </tbody>
   </table>
+  </div>
 </template>
 

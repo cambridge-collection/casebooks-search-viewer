@@ -1,0 +1,101 @@
+/* dynaXML CONTENT stylesheet */
+
+               @font-face {
+               font-family: 'Newton Sans';
+               src: url('../../fonts/NewtonSans.eot'); /* IE9 Compat Modes */
+               src: url('../../fonts/NewtonSans.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+               url('../../fonts/NewtonSans.woff') format('woff'), /* Modern Browsers */
+               url('../../fonts/NewtonSans.ttf')  format('truetype'), /* Safari, Android, iOS */
+               url('../../fonts/NewtonSans.svg#717182e6b3f6e418f2528d246568536f') format('svg'); /* Legacy iOS */
+               
+               font-style:   normal;
+               font-weight:  400;
+               }
+               @font-face {
+               font-family: 'Cardo';
+               src: url('../../fonts/Cardo104s.eot'); /* IE9 Compat Modes */
+               src: url('../../fonts/Cardo104s.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+               url('../../fonts/Cardo104s.woff') format('woff'), /* Modern Browsers */
+               url('../../fonts/Cardo104s.ttf')  format('truetype'), /* Safari, Android, iOS */
+               url('../../fonts/Cardo104s.svg#ca898a635a8375daa7bc3c1ed216ba43') format('svg'); /* Legacy iOS */
+               
+               font-style:   normal;
+               font-weight:  400;
+               }
+
+
+.header {color:#323C56;background: #e3d5b1; /* Old browsers */
+background: -moz-linear-gradient(top, #e3d5b1 0%, #e3d5b1 99%, #48577C 100%, #48577C 100%, #48577C 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e3d5b1), color-stop(99%,#e3d5b1), color-stop(100%,#48577C), color-stop(100%,#48577C), color-stop(100%,#48577C)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, #e3d5b1 0%,#e3d5b1 99%,#48577C 100%,#48577C 100%,#48577C 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, #e3d5b1 0%,#e3d5b1 99%,#48577C 100%,#48577C 100%,#48577C 100%); /* Opera11.10+ */
+background: -ms-linear-gradient(top, #e3d5b1 0%,#e3d5b1 99%,#48577C 100%,#48577C 100%,#48577C 100%); /* IE10+ */
+background: linear-gradient(top, #e3d5b1 0%,#e3d5b1 99%,#48577C 100%,#48577C 100%,#48577C 100%); /* W3C */
+padding-left: 0.5em; padding-right:0.5em}
+
+.header a, .header a:link, .header a:visited, .header a:hover, .header a:active {color:#323C56;text-decoration:none;}
+
+.header h1 {
+font-size: 400%;
+font-variant: small-caps;
+margin: 0;
+padding: 0.375em 0 0;
+text-shadow: 0.02em 0.02em 0.02em rgba(0, 0, 0, 0.2);
+}
+#tagline {
+/*font-family: "Helvetica Neue", Arial, sans-serif;
+*/
+font-size:1.16667em;
+/*font-style:italic;*/
+margin:0 0 0 80px; 
+padding:0 0 1.5em 0;
+text-indent:0;
+font-style:italic;
+/*text-shadow: 0.05em .05em 0.05em rgba(0,0,0,.8);
+*/}
+
+body {
+min-height:100%;
+margin:0;
+font-family: Constantia,Palatino,"Palatino Linotype","Palatino LT STD",Georgia,serif;
+font-size: 16px;
+position: relative;
+}
+
+.hit  {
+background-color: #D6DCE5; 
+color: red; 
+font-weight: bold;
+}
+
+.subhit  {
+color: red; 
+font-weight: bold;
+}
+
+.hitsection  {
+background-color: #D6DCE5;
+}
+
+.ns {font-family: "Newton Sans"}
+.cardo {font-family: 'Cardo', serif; }
+body, html {}
+
+div.transcription {
+    padding: 0.25em 1em;
+    line-height: 1.5;
+    width: 53%;
+    display: table-cell;
+        border: 1px black solid;
+        vertical-align:top;
+}
+#endnotes {border-top-style:none; display:none}
+.transcription>div, #endnotes>div, div.metadata {padding:1em}
+#image_viewer {width:45% !important; height:400px; display: table-cell}
+.content {
+display:table;
+width:100%;
+    background: #FFF7E1;
+    margin-bottom:1em
+}
+p.taglist {text-align:center}

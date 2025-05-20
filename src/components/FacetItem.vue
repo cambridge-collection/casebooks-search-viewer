@@ -53,13 +53,19 @@ const facet_name = computed(() =>  _bucket_to_param_name(props.param_name))
 
 const get_subgroup = computed(() => {
   const tidied_val = props.facet.val.replaceAll(/^"(.+?)"$/g, '')
-  const val_pattern = new RegExp('^' + tidied_val + '::')
+  const val_pattern = new RegExp('^' + escape(tidied_val) + '::')
   let result: { val: string; count: number }[] = []
-  if (subgroupName.value && subgroupName.value in props.subfacets) {
+
+  if (subgroupName.value && subgroupName.value in props.subfacets && props.subfacets[subgroupName.value] !== undefined ) {
     result = (props.subfacets[subgroupName.value] as { val: string; count: number }[]).filter(subfacet => val_pattern.test(subfacet.val))
   }
   return result
 })
+
+/* This check needs to be better */
+const has_subgroup = computed(() =>  subgroupName.value && subgroupName.value in props.subfacets && Array.isArray(props.subfacets[subgroupName.value]) && (props.subfacets[subgroupName.value] as { val: string; count: number }[]).some((item: { val: string; count: number }) => item.val.startsWith(props.facet.val)) )
+
+
 
 const name = computed(() => {
   let value = props.facet.val.split('::').slice(-1)[0]
@@ -79,23 +85,30 @@ const name = computed(() => {
   <li class="list-group-item facet-item">
     <router-link
       :to="{ name: 'search', query: cancel_link(facet_name, facet.val, params) }" class="d-flex justify-content-between align-items-center"
-      v-if="is_selected && subgroupName"
+      v-if="is_selected && has_subgroup"
     >
       <span class="col1 text-danger"><i class="fa fa-minus-square" aria-hidden="true"></i></span>
-      <span class="col collapse2">{{ name }}</span>
-      <span class="col text-right"></span>
+      <span class="col collapse2 col2">{{ name }}</span>
+      <span class="col text-right col3">({{ props.facet.count }})</span>
     </router-link>
-
+    <router-link
+      :to="{ name: 'search', query: new_facet_params }" class="d-flex justify-content-between align-items-center"
+      v-else-if="!is_selected && has_subgroup"
+    >
+      <span class="col1 text-danger"><i class="fa fa-plus-square" aria-hidden="true"></i></span>
+      <span class="col collapse2 col2">{{ name }}</span>
+      <span class="col text-right col3">({{ props.facet.count }})</span>
+    </router-link>
     <router-link
       :to="{ name: 'search', query: cancel_link(facet_name, facet.val, params) }" class="d-flex justify-content-between align-items-center"
-      v-if="is_selected && !subgroupName"
+      v-else-if="is_selected && !has_subgroup"
     >
-      <span class="col"><i>{{ name }}</i></span>
-      <span class="badge text-danger"><i class="fas fa-window-close" aria-hidden="true"></i></span>
+      <span class="col2"><i>{{ name }}</i></span>
+      <span class="badge text-danger col3"><i class="fa fa-window-close" aria-hidden="true"></i></span>
     </router-link>
     <router-link :to="{ name: 'search', query: new_facet_params }" class="d-flex justify-content-between align-items-center" v-else>
-      <span class="col">{{ name }}</span>
-      <span class="badge badge-info badge-pill">({{ props.facet.count }})</span>
+      <span class="col2">{{ name }}</span>
+      <span class="badge badge-info badge-pill col3">({{ props.facet.count }})</span>
     </router-link>
   </li>
 
@@ -158,4 +171,32 @@ const name = computed(() => {
 .dcpNew .facet .facetGroup .facetSubGroup {
   padding-left: 1em;
 }
+
+
+li {margin: 0 0 0.5rem 0}
+
+/* ul > li:nth-child(odd) { background :#fafafa}
+ul > li:nth-child(even) { background :#fafafa}*/
+
+li.list-group-item a {
+  display: flex;
+}
+
+span.col1 {
+  width: 18px;
+  display: inline-block;
+  max-width: 18px;
+  margin-left: -18px
+}
+
+span.col2 {
+  display: inline-block;
+  max-width: 100%;
+  flex-grow: 1;
+  vertical-align: top;
+  flex-basis: 0%;
+}
+span.col3 {color: rgb(23, 23, 23)}
+
+
 </style>

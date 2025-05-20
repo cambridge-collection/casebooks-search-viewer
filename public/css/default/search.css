@@ -1,0 +1,56 @@
+.searchPage {
+    font-family: verdana, arial, sans-serif;
+    color: #171717;
+    font-size:12px
+}
+
+.searchPage p.name-type *, .searchPage p.name-type *, .searchPage p.search-sectionType *, .searchPage p.search-date-types *, .searchPage p.age-role * {
+    display: inline-block;
+    padding-right: 1.5em;
+    padding-left: 0.5em;
+}
+
+.searchPage .help {font-style: italic; font-size: 0.9em;}
+
+.searchPage p label {
+    display: inline-block;
+    padding-right:0.25em;
+}
+.question-asked label {vertical-align: middle;}
+.searchPage input {background:#fafafa;}
+.searchPage .search-querent>*, .searchPage .search-patient>*, .searchPage .search-name>*, .searchPage .search-text * {display:inline-block;padding-right: 0.75em;
+}
+.searchPage .name input {width:75%}
+.searchPage span.date-item, .searchPage span.age-item {display:inline-block; margin-right:0.5em;}
+.searchPage span.date-item input, .searchPage span.age-item input, .searchPage .search-buttons input, .searchPage input[type="submit"], .searchPage input[type="reset"] {
+    width:auto;
+    margin-right: 0.5em;
+}
+.searchPage .search-age {margin-bottom: 0;}
+.searchPage .querent-is-asking-about * {display:inline-block;}
+.searchPage p.querent-is-asking-about>input {margin-right:0.5em}
+.searchPage p.querent-is-asking-about>label {margin-right: 1.5em;}
+
+.searchPage span.date-item span {display: none;}
+
+.searchPage p.search-text {
+    margin: 0;
+}
+
+.searchPage p.search-buttons {
+    margin-top: 3em;
+}
+
+
+.between>span.date-item:first-child, .between2>span.age-item:first-child {
+    margin-left: 1em;
+}
+
+.searchPage .top-border {
+    border-top: 1px solid #304220;
+}
+
+#age-search-type {
+    width: 10em;
+    margin-right: 1em;
+}
