@@ -1,20 +1,13 @@
-# Epsilon Search Result Viewer
+# Casebooks Search Result Viewer
 
-Epsilon Search Result Viewer is a Vue3 Single-Page Application (SPA) that displays results from the Epsilon Search API.
-
-The repository contains a separate release branch for each of Epsilon’s release environments:
-
-- `epsilon-editorial`: (editorial release)
-- `epsilon-staging`: (staging release)
-- `epsilon-production`: (production release) 
+Epsilon Search Result Viewer is a Vue3 Single-Page Application (SPA) that displays results from the Casebooks Search API.
 
 ## Installation
 
 1. **Clone the Repository:**
 
-       git clone git@github.com:cambridge-collection/epsilon-search-viewer.git
-       cd epsilon-search-viewer
-       git switch epsilon-editorial # Or whatever branch you want
+       git clone git@github.com:cambridge-collection/casebooks-search-viewer
+       cd casebooks-search-viewer
 
 2. **Install Dependencies:**
 
@@ -51,7 +44,7 @@ Example snippet from `src/implementationConfig.ts`:
        const debug: boolean = true
        
        /* API URL for the search backend */
-       const api_url: string = 'https://epsilon-editorial-search.cudl-sandbox.net'
+       const api_url: string = 'https://casebooks-search.casebooks.lib.cam.ac.uk'
        
        /* Facet definitions for the handling and display of URL facet parameters to UI facets */
        type Facet = {
@@ -109,31 +102,3 @@ To build the application for production, run:
        npm run build
 
 The production-ready files will be generated in the `dist/` directory.
-
-## Project Structure
-
-       epsilon-search-viewer-epsilon-editorial/
-       ├── public/                         # Contains assets used by SPA
-       └── src/                            # Contains SPA source
-           ├── App.vue                     # Root Vue component
-           ├── main.ts                     # Application entry point
-           ├── implementationConfig.ts     # Search and configuration settings
-           ├── router/
-           │   └── index.ts               # Routing configuration
-           ├── views/
-           │   └── SearchResults.vue      # Main view for displaying search results
-           ├── components/
-           │   ├── ContributorDetails.vue # Output contributor details
-           │   ├── FacetBlock.vue         # Output facet block
-           │   ├── FacetItem.vue          # Individual facet item
-           │   ├── FacetItem.d.ts         # TypeScript declarations for facet items
-           │   ├── ResultList.vue         # List container for search 
-           │   │                            # results
-           │   ├── ResultItem.vue         # Component for a single search result
-           │   ├── NoResults.vue          # Component displayed when no results are found
-           │   └── campl-page-header.vue  # Page header component
-           └── lib/
-               └── collections.ts          # Get Contributor data
-               └── utils.ts                # Utility functions used
-                                             # throughout the application
-
