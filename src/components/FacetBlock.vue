@@ -17,19 +17,18 @@ const props = defineProps({
   params: {type: Array as () => { key: string; value: string }[], required: true},
 })
 
-const name = computed<string>(() => props.facet_key[props.desired_facet].name.replace(/(^"|"$)/g, ''))
+const name = computed<string>(() => {
+  const facetName = props.facet_key[props.desired_facet]?.name ?? props.desired_facet
+  return facetName.replace(/(^"|"$)/g, '')
+})
 
 const root_param_name = computed<string>(() => props.desired_facet.replace(/(^f\d+-)/g, ''))
 
-const target_facets = computed<{ val: string; count: number; }[]>(() => {
-  return props.facets[props.desired_facet]
-})
+const target_facets = computed<{ val: string; count: number; }[]>(() => props.facets[props.desired_facet] ?? [])
 
 const has_entries = computed<boolean>(() => {
-  return (
-    props.desired_facet in props.facets &&
-    props.facets[props.desired_facet].length > 0
-  )
+  const facetEntries = props.facets[props.desired_facet]
+  return props.desired_facet in props.facets && Array.isArray(facetEntries) && facetEntries.length > 0
 })
 
 // Refactor to generic function using implementation.facet (with subfacets)
@@ -39,8 +38,12 @@ const subfacets = computed(() => {
   function walk(sub: Record<string, Facet> | undefined) {
     if (!sub) return
     for (const key in sub) {
-      result[key] = props.facets[key]
-      walk(sub[key].subfacet)
+      const current = sub[key]
+      if (!current) continue
+      result[key] = props.facets[key] ?? []
+      if (current.subfacet) {
+        walk(current.subfacet)
+      }
     }
   }
   walk(props.facet_key[props.desired_facet]?.subfacet)

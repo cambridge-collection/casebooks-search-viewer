@@ -14,7 +14,7 @@ const is_open = computed<boolean>(() => { return props.tag_text == '123' } )
 const open_css = computed<string| null>(() => is_open.value ? 'open' : '' )
 const question_hierarchy = computed<string[]>(() => props.tag_text.split('::'))
 const main_questions = computed<string[]>(() => question_hierarchy.value.length > 1 ? question_hierarchy.value.slice(0, -1): question_hierarchy.value )
-const subquestion = computed<string>(() => question_hierarchy.value.length > 1 ? question_hierarchy.value.slice(-1)[0]: '')
+const subquestion = computed<string>(() => question_hierarchy.value.length > 1 ? (question_hierarchy.value.slice(-1)[0] ?? ''): '')
 </script>
 
 <template>

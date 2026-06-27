@@ -15,8 +15,11 @@ const props = defineProps({
 const show_snippets = ref(false)
 
 const doc_type = computed<string>(() => {
-  const val: string | string[] = props.item['facet-document-type-0'] ?? ''
-  return Array.isArray(val) ? val[0] : val
+  const val: unknown = props.item?.['facet-document-type-0']
+  if (Array.isArray(val)) {
+    return (val[0] as string | undefined) ?? ''
+  }
+  return typeof val === 'string' ? val : ''
 })
 
 const container_width = computed<string>(() => {
@@ -31,9 +34,9 @@ const container_width = computed<string>(() => {
 
 const view_mode = computed<string>(() => {
   const show_obj = Array.isArray(props.params.filter(item => item.key == 'show')) ? props.params.filter(item => item.key == 'show')[0]: {"key": "show", "value": ""}
-  const show = show_obj?.value
+  const show = show_obj?.value ?? ''
   let result: string  = "diplomatic"
-  if (['normalised', 'translation'].includes(show))  { result = show}
+  if (['normalised', 'translation'].includes(show))  { result = show }
   return result
 })
 
