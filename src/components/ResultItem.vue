@@ -173,15 +173,15 @@ const item_path = computed<string>(() => (view_mode.value == 'diplomatic' || ['S
       <div class="campl-content-container campl-right-padding">
         <p class="participants">
           <DataTag
-            v-for="item in [
+            v-for="participant in [
               ...new Set([...item['facet-querent'], ...item['facet-patient']]),
             ]"
             :element_name="'f1-participant'"
-            :tag_text="item"
+            :tag_text="participant"
             :icon_css="'fa fa-user'"
-            :param_val="item"
+            :param_val="participant"
             :params="params"
-            :key="JSON.stringify(item)"
+            :key="JSON.stringify(participant)"
           />
         </p>
         <div class="topics">
@@ -196,13 +196,13 @@ const item_path = computed<string>(() => (view_mode.value == 'diplomatic' || ['S
         <p class="info_tags">
           <span class="practitioner">
             <DataTag
-              v-for="item in [...new Set([...item['facet-practitioner']])]"
+              v-for="practitioner in [...new Set([...item['facet-practitioner']])]"
               element_name="f1-practitioner-0"
-              :tag_text="item.replace(/^Other::/, '')"
-              :param_val="item"
+              :tag_text="practitioner.replace(/^Other::/, '')"
+              :param_val="practitioner"
               :params="params"
               icon_css="fa fa-star"
-              :key="JSON.stringify(item)"
+              :key="JSON.stringify(practitioner)"
             />
 
             <DataTag
