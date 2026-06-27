@@ -68,12 +68,13 @@ const has_subgroup = computed(() =>  subgroupName.value && subgroupName.value in
 
 
 const name = computed(() => {
-  let value = props.facet.val.split('::').slice(-1)[0]
+  const splitVal = props.facet.val.split('::').slice(-1)[0]
+  let value = splitVal ?? ''
   if (
     props.param_name == 'f1-year-month' &&
     /^(0[1-9]|1[0,1,2])$/.test(value)
   ) {
-    const date = new Date(2009, parseInt(value) - 1, 10) // 2009-11-10
+    const date = new Date(2009, parseInt(value, 10) - 1, 10) // 2009-11-10
     value = date.toLocaleString('default', { month: 'long' })
   }
   return value

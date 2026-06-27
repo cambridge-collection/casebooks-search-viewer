@@ -106,10 +106,10 @@ const all_params_uri = computed<string>(() =>{
 })
 
 const view_mode = computed(() => {
-  const show_obj = Array.isArray(all_params.value.filter(item => item.key == 'show')) ? all_params.value.filter(item => item.key == 'show')[0]: {"key": "show", "value": ""}
-  const show = show_obj?.value
-  let result: string  = "diplomatic"
-  if (['normalised', 'translation'].includes(show))  { result = show}
+  const show_obj = all_params.value.find(item => item.key === 'show') ?? { key: 'show', value: '' }
+  const show = show_obj.value ?? ''
+  let result = 'diplomatic'
+  if (['normalised', 'translation'].includes(show)) { result = show }
   return result
 })
 
@@ -122,8 +122,9 @@ const keyword_string = computed<string>(() => {
 const advanced_query_string = computed<string>(() => {
   const result: Record<string, string[]> = {}
     all_params.value.filter(item => implementation.advanced_params.includes(item.key)).forEach((item) => {
-      if (result[item.key]) {
-        result[item.key].push(item.value);
+      const existing = result[item.key]
+      if (existing) {
+        existing.push(item.value);
       } else {
         result[item.key] = [item.value];
       }

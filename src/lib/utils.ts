@@ -19,6 +19,7 @@ const bucket_to_param_lookup = computed<Array<{ key: string; value: string }>>((
     let arr: Array<{ key: string; value: string }> = [];
     for (const key in facets) {
       const facet = facets[key];
+      if (!facet) continue
       const effectiveValue = topAlias ?? facet.alias ?? key;
       arr.push({ key, value: effectiveValue });
       if (facet.subfacet) {
@@ -39,11 +40,14 @@ const param_to_bucket_lookup = computed<Array<{ key: string; value: string }>>((
   const processFacets = (facets: Record<string, Facet>) => {
     for (const key in facets) {
       const facet = facets[key];
+      if (!facet) continue
       if (facet.subfacet) {
         const subKeys = Object.keys(facet.subfacet);
         if (subKeys.length > 0) {
           const immediateSubfacetKey = subKeys[0];
-          lookup.push({ key, value: immediateSubfacetKey });
+          if (immediateSubfacetKey) {
+            lookup.push({ key, value: immediateSubfacetKey });
+          }
         }
         processFacets(facet.subfacet);
       }
@@ -67,6 +71,7 @@ function _get_subfacet_bucket_name(facetKey: string): string | null {
 const _find_facet_hierarchy = (facetKey: string, facets: Record<string, Facet> = implementation.facet_key, path: string[] = []): string[] | null => {
   for (const key in facets) {
     const facet = facets[key];
+    if (!facet) continue
 
     // If the current key matches, return the path + key
     if (key === facetKey) {
@@ -86,6 +91,7 @@ const _find_facet_hierarchy = (facetKey: string, facets: Record<string, Facet> =
 const _is_hierarchical = (searchKey: string, facets: Record<string, Facet> = implementation.facet_key): boolean => {
   for (const key in facets) {
     const facet = facets[key];
+    if (!facet) continue
 
     // If searchKey matches the key or alias, return whether it has a subfacet
     if (key === searchKey || facet.alias === searchKey) {
@@ -105,8 +111,9 @@ const _is_hierarchical = (searchKey: string, facets: Record<string, Facet> = imp
 function _params_to_query_structure(param_array: { key: string; value: string }[]) {
   const result: Record<string, string[]> = {};
   param_array.forEach((item) => {
-    if (result[item.key]) {
-      result[item.key].push(item.value);
+    const existing = result[item.key]
+    if (existing) {
+      existing.push(item.value);
     } else {
       result[item.key] = [item.value];
     }
@@ -178,7 +185,8 @@ function _query_param_sort(key: string) {
      Search terms are prefixed with 000_ to ensure they come first in the search
      terms display
    */
-  return (key in implementation.facet_key) ? implementation.facet_key[key].name : "000_"+key
+  const facetName = implementation.facet_key[key]?.name
+  return facetName ?? "000_"+key
 }
 
 function _tracer_bullet(msg: string): void {
