@@ -1,7 +1,32 @@
 <script setup lang="ts">
+import { ref, watch } from 'vue'
+import { useRouter, type LocationQueryRaw } from 'vue-router'
+
 const props = defineProps({
   keyword: { type: String, required: true },
 })
+
+const router = useRouter()
+
+const term = ref(props.keyword)
+
+watch(
+  () => props.keyword,
+  value => {
+    term.value = value
+  },
+)
+
+function onSubmit(): void {
+  const q: LocationQueryRaw = { page: 1 }
+  const text = term.value.trim()
+  if (text) q.keyword = text
+  router.push({ name: 'search', query: q })
+}
+
+function onClear(): void {
+  router.push({ name: 'search', query: {} })
+}
 </script>
 
 <template>
@@ -13,7 +38,7 @@ const props = defineProps({
         <p>Sorry, no results...</p>
         <p>Try modifying your search:</p>
         <div class="forms">
-          <form method="get" action="/search">
+          <form @submit.prevent="onSubmit">
             <table>
               <tbody>
               <tr>
@@ -22,21 +47,16 @@ const props = defineProps({
                     type="text"
                     name="keyword"
                     size="40"
-                    :value="props.keyword"
-                  />
-                  <input
-                    type="hidden"
-                    name="page"
-                    value="1"
+                    v-model="term"
                   />
                   &nbsp;<input
                   type="submit"
                   value="Search"
                 />
                   <input
-                    type="reset"
-                    onclick="location.href='/search'"
+                    type="button"
                     value="Clear"
+                    @click="onClear"
                   />
                 </td>
               </tr>

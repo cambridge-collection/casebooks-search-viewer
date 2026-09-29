@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { ref, computed, onMounted } from 'vue';
-import { useRouter, useRoute, stringifyQuery, type LocationQueryValue } from 'vue-router'
+import { ref, computed, watch } from 'vue';
+import { useRouter, useRoute, stringifyQuery, type LocationQueryRaw, type LocationQueryValue } from 'vue-router'
 import ResultItem from '@/components/ResultItem.vue';
 import FacetBlock from '@/components/FacetBlock.vue';
 import NoResults from '@/components/NoResults.vue';
@@ -93,10 +93,6 @@ const filtering_params = computed<Array<{ key: string; value: string }>>(() => {
   return all_params.value.filter(item => !keysToDelete.includes(item.key))
 })
 
-const filtering_params_string = computed<string>(() => {
-  return JSON.stringify(filtering_params.value)
-})
-
 const all_params_uri = computed<string>(() =>{
   const result_array: string[] = []
   all_params.value.forEach((item: { key: string; value: string }) => {
@@ -133,18 +129,18 @@ const advanced_query_string = computed<string>(() => {
   return stringifyQuery(result)
 })
 
-const show_select = ref(view_mode)
-const show_form = ref<HTMLFormElement | null>(null)
-const sort_select = ref(sort)
-const sort_form = ref<HTMLFormElement | null>(null)
-
 function get_facet_header(str: string) {
   return implementation.facet_key[str]?.name
     ?? implementation.facet_key[`${str}-0`]?.name
     ?? str
 }
 
-function throw_error(error: string) {
+/* Navigations no longer remount this component, so a slow response can outlive
+   the query that asked for it; only the newest request may touch state. */
+let request_id = 0
+
+function throw_error(error: string, request: number) {
+  if (request !== request_id) return
   is_error.value['bool'] = true
   is_error.value['message'] = error
   is_loading.value = false
@@ -160,7 +156,20 @@ const updateURL = async (page: number): Promise<void> => {
   })
 }
 
+function pushSelectChange(e: Event, key: string, default_value: string): void {
+  const q: LocationQueryRaw = { ...route.query }
+  for (const k of implementation.params_to_remove) delete q[k]
+  const value = (e.target as HTMLSelectElement).value
+  if (value === default_value) delete q[key]
+  else q[key] = value
+  q.page = 1
+  router.push({ name: 'search', query: q })
+}
+
 async function fetchData(start: number) {
+  const request = ++request_id
+  is_loading.value = true
+  is_error.value = { bool: false, message: '' }
   commits.value = []
   const control_params = []
   if (start) {
@@ -182,6 +191,7 @@ async function fetchData(start: number) {
     }
 
     const data = await response.json();
+    if (request !== request_id) return
     _tracer_bullet(data);
 
     // Handle highlighting if present
@@ -225,8 +235,9 @@ async function fetchData(start: number) {
 
       facets.value = facetsCleaned;
     }
+    is_loading.value = false
   } catch (error) {
-    throw_error(error instanceof Error ? error.message : String(error));
+    throw_error(error instanceof Error ? error.message : String(error), request);
   }
 }
 
@@ -236,12 +247,15 @@ function has_facets(section_facets: string[]) {
 
 
 
-onMounted(async () => {
-  window.scrollTo(0, 0)
-  await fetchData(currentPage.value).then(() => {
-    is_loading.value = false
-  })
-})
+watch(
+  () => route.fullPath,
+  () => {
+    currentPage.value = get_current_page()
+    window.scrollTo(0, 0)
+    fetchData(currentPage.value)
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
@@ -259,21 +273,13 @@ onMounted(async () => {
       </p>
       <p>Please try again in a few minutes</p>
     </div>
-    <div class="labels mode-controls campl-column12" v-show="!is_loading && !is_error['bool']" :key="route.fullPath">
+    <div class="labels mode-controls campl-column12" v-show="!is_loading && !is_error['bool']">
       <div class="query campl-column8">
         <div class="campl-content-container">
           <div id="results_label">
-            <form ref="show_form" method="get" action="/search">
-            <input
-              v-for="obj in filtering_params.concat({'key': 'sort', 'value': sort })"
-              type="hidden"
-              :name="String(obj.key)"
-              :value="obj.value"
-              :key="obj.key + obj.value"
-            />
-            <input type="hidden" name="page" value="1" />
+            <form @submit.prevent>
             <span>Display </span>
-            <select size="1" name="show" v-model="show_select" @change="show_form!.submit()">
+            <select size="1" name="show" :value="view_mode" @change="pushSelectChange($event, 'show', 'diplomatic')">
               <option value="diplomatic">diplomatic version</option>
               <option value="normalised">normalised version</option>
               <option value="translation">normalised version with translation</option>
@@ -302,9 +308,9 @@ onMounted(async () => {
       </div>
       <div class="campl-column4 result-controls right">
         <div class="campl-content-container">
-          <form ref="sort_form" method="get" action="/search">
+          <form @submit.prevent>
             <span>Sorted by:&nbsp;</span>
-            <select size="1" name="sort" v-model="sort_select" @change="sort_form!.submit()">
+            <select size="1" name="sort" :value="sort" @change="pushSelectChange($event, 'sort', 'score')">
               <option value="score">relevance</option>
               <option value="sort-date">consultation date (asc)</option>
               <option value="sort-date-desc">consultation date (desc)</option>
@@ -312,14 +318,6 @@ onMounted(async () => {
               <option value="sort-volume-name">volume name</option>
               <option value="sort-title">title</option>
             </select>
-            <input
-              v-for="obj in filtering_params.concat({'key': 'show', 'value': view_mode })"
-              type="hidden"
-              :name="String(obj.key)"
-              :value="obj.value"
-              :key="obj.key + obj.value"
-            />
-            <input type="hidden" name="page" value="1" />
           </form>
         </div>
       </div>
@@ -341,7 +339,7 @@ onMounted(async () => {
           <div class="campl-column12">
             <div class="campl-column3 campl-secondary-content facets">
               <h2>Refine your results</h2>
-              <div v-for="section in implementation.structured_desired" :key="filtering_params_string+section.id">
+              <div v-for="section in implementation.structured_desired" :key="section.id">
                 <facet-block
                   v-for="(facet, index) in section.facets"
                   :section_id="section.id"
@@ -352,7 +350,7 @@ onMounted(async () => {
                   :has_facets="has_facets(section.facets)"
                   :section_title="section.title"
                   :index="index"
-                  :key="filtering_params_string+'::'+facet"
+                  :key="facet"
                 />
               </div>
 
